@@ -20,7 +20,7 @@
     }
 
     header {
-      padding: 20px;
+      padding: 18px 20px;
       border-bottom: 1px solid #252b38;
       display: flex;
       justify-content: space-between;
@@ -28,11 +28,11 @@
     }
 
     .logo {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: bold;
     }
 
-    .credit {
+    .credits {
       background: #171d29;
       padding: 9px 14px;
       border-radius: 20px;
@@ -40,15 +40,15 @@
     }
 
     main {
-      max-width: 900px;
-      margin: 50px auto;
+      max-width: 850px;
+      margin: 45px auto;
       padding: 20px;
       text-align: center;
     }
 
     h1 {
-      font-size: 42px;
-      margin-bottom: 15px;
+      font-size: 40px;
+      margin-bottom: 12px;
     }
 
     .subtitle {
@@ -56,73 +56,97 @@
       margin-bottom: 35px;
     }
 
-    .box {
+    .upload-box {
       background: #111722;
-      border: 1px solid #293142;
-      border-radius: 16px;
-      padding: 25px;
-      text-align: left;
+      border: 2px dashed #39445a;
+      border-radius: 18px;
+      padding: 45px 25px;
     }
 
-    label {
-      display: block;
+    .movie-icon {
+      font-size: 55px;
+      margin-bottom: 15px;
+    }
+
+    .upload-box h2 {
       margin-bottom: 10px;
+    }
+
+    .upload-box p {
+      color: #8f99aa;
+      margin-bottom: 25px;
+    }
+
+    .upload-button {
+      display: inline-block;
+      background: #6c63ff;
+      padding: 14px 25px;
+      border-radius: 10px;
+      cursor: pointer;
       font-weight: bold;
     }
 
-    textarea {
-      width: 100%;
-      min-height: 180px;
-      background: #080c13;
-      color: white;
-      border: 1px solid #30394b;
-      border-radius: 10px;
-      padding: 15px;
-      font-size: 16px;
-      resize: vertical;
-      outline: none;
+    .upload-button:hover {
+      background: #584ff0;
     }
 
-    textarea:focus {
-      border-color: #6c63ff;
+    #movieFile {
+      display: none;
     }
 
-    button {
+    #fileName {
+      margin-top: 20px;
+      color: #7cff9b;
+      word-break: break-word;
+    }
+
+    .generate-button {
       width: 100%;
-      margin-top: 18px;
+      margin-top: 25px;
       padding: 15px;
       border: none;
       border-radius: 10px;
-      background: #6c63ff;
+      background: #252d3d;
       color: white;
       font-size: 17px;
       font-weight: bold;
       cursor: pointer;
     }
 
-    button:hover {
-      background: #584ff0;
+    .generate-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     #status {
       margin-top: 20px;
       color: #aab2c0;
-      text-align: center;
+    }
+
+    .info {
+      margin-top: 30px;
+      color: #687386;
+      font-size: 14px;
+      line-height: 1.7;
     }
 
     footer {
       text-align: center;
-      padding: 30px;
+      padding: 25px;
       color: #687386;
     }
 
     @media (max-width: 600px) {
       h1 {
-        font-size: 32px;
+        font-size: 31px;
       }
 
       main {
-        margin-top: 30px;
+        margin-top: 25px;
+      }
+
+      .upload-box {
+        padding: 35px 18px;
       }
     }
   </style>
@@ -132,32 +156,59 @@
 
   <header>
     <div class="logo">🎬 Movie Explained AI</div>
-    <div class="credit">Credits: 10</div>
+    <div class="credits">Credits: 10</div>
   </header>
 
   <main>
+
     <h1>Movie Explained Video Generator</h1>
 
     <p class="subtitle">
-      Create movie explanation videos with AI
+      Upload a movie and create an explanation video
     </p>
 
-    <div class="box">
+    <div class="upload-box">
 
-      <label for="movieText">Enter Movie Story / Script</label>
+      <div class="movie-icon">🎥</div>
 
-      <textarea
-        id="movieText"
-        placeholder="Paste your movie story or script here..."
-      ></textarea>
+      <h2>Upload Your Movie</h2>
 
-      <button onclick="generateVideo()">
-        🚀 Generate Video
+      <p>
+        Select a video file to start processing
+      </p>
+
+      <label for="movieFile" class="upload-button">
+        📁 Choose Movie
+      </label>
+
+      <input
+        type="file"
+        id="movieFile"
+        accept="video/mp4,video/x-matroska,video/*"
+      >
+
+      <div id="fileName">
+        No movie selected
+      </div>
+
+      <button
+        id="generateButton"
+        class="generate-button"
+        disabled
+        onclick="startProcessing()"
+      >
+        🚀 Generate Explanation Video
       </button>
 
       <div id="status"></div>
 
     </div>
+
+    <div class="info">
+      Supported video files: MP4, WebM, MOV and other browser-supported formats.<br>
+      The movie will be processed temporarily for video generation.
+    </div>
+
   </main>
 
   <footer>
@@ -165,18 +216,44 @@
   </footer>
 
   <script>
-    function generateVideo() {
-      const text = document.getElementById("movieText").value.trim();
-      const status = document.getElementById("status");
 
-      if (!text) {
-        status.innerText = "⚠️ Please enter a movie story or script.";
+    const movieFile = document.getElementById("movieFile");
+    const fileName = document.getElementById("fileName");
+    const generateButton = document.getElementById("generateButton");
+    const status = document.getElementById("status");
+
+    movieFile.addEventListener("change", function () {
+
+      if (movieFile.files.length === 0) {
+        fileName.innerText = "No movie selected";
+        generateButton.disabled = true;
+        return;
+      }
+
+      const file = movieFile.files[0];
+
+      fileName.innerText = "Selected: " + file.name;
+
+      generateButton.disabled = false;
+
+      status.innerText = "Movie ready for processing.";
+
+    });
+
+    function startProcessing() {
+
+      const file = movieFile.files[0];
+
+      if (!file) {
+        status.innerText = "Please select a movie first.";
         return;
       }
 
       status.innerText =
-        "⏳ Video generation system will be connected in the next step...";
+        "⏳ Upload system will be connected in the next step.";
+
     }
+
   </script>
 
 </body>
