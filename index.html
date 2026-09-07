@@ -1,1 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Explained AI</title>
 
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #0b0f19;
+      color: white;
+      min-height: 100vh;
+    }
+
+    header {
+      padding: 20px;
+      border-bottom: 1px solid #252b38;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .credit {
+      background: #171d29;
+      padding: 9px 14px;
+      border-radius: 20px;
+      color: #7cff9b;
+    }
+
+    main {
+      max-width: 900px;
+      margin: 50px auto;
+      padding: 20px;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 42px;
+      margin-bottom: 15px;
+    }
+
+    .subtitle {
+      color: #aab2c0;
+      margin-bottom: 35px;
+    }
+
+    .box {
+      background: #111722;
+      border: 1px solid #293142;
+      border-radius: 16px;
+      padding: 25px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      background: #080c13;
+      color: white;
+      border: 1px solid #30394b;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 16px;
+      resize: vertical;
+      outline: none;
+    }
+
+    textarea:focus {
+      border-color: #6c63ff;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 18px;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: #6c63ff;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #584ff0;
+    }
+
+    #status {
+      margin-top: 20px;
+      color: #aab2c0;
+      text-align: center;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px;
+      color: #687386;
+    }
+
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 32px;
+      }
+
+      main {
+        margin-top: 30px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="logo">🎬 Movie Explained AI</div>
+    <div class="credit">Credits: 10</div>
+  </header>
+
+  <main>
+    <h1>Movie Explained Video Generator</h1>
+
+    <p class="subtitle">
+      Create movie explanation videos with AI
+    </p>
+
+    <div class="box">
+
+      <label for="movieText">Enter Movie Story / Script</label>
+
+      <textarea
+        id="movieText"
+        placeholder="Paste your movie story or script here..."
+      ></textarea>
+
+      <button onclick="generateVideo()">
+        🚀 Generate Video
+      </button>
+
+      <div id="status"></div>
+
+    </div>
+  </main>
+
+  <footer>
+    © 2026 Movie Explained AI
+  </footer>
+
+  <script>
+    function generateVideo() {
+      const text = document.getElementById("movieText").value.trim();
+      const status = document.getElementById("status");
+
+      if (!text) {
+        status.innerText = "⚠️ Please enter a movie story or script.";
+        return;
+      }
+
+      status.innerText =
+        "⏳ Video generation system will be connected in the next step...";
+    }
+  </script>
+
+</body>
+</html>
